@@ -20,7 +20,11 @@ A simple VS Code extension for creating repeating reminders that notify you at r
 
 ## Installation
 
-Download the latest `.vsix` file from the [GitHub releases page](https://github.com/NathanTBeene/vscode-reminder/releases) and install it in VS Code using `Extensions: Install from VSIX...` command.
+1. Download the latest `.vsix` file from the [GitHub releases page](https://github.com/NathanTBeene/vscode-reminder/releases).
+2. In VSCode, go to your `Extensions` tab.
+3. In the top right corner, click the three dots.
+4. Click `Install from VSIX`.
+5. Enjoy.
 
 ### Manual Build
 
