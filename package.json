@@ -18,12 +18,6 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "vscode-reminder.helloWorld",
-        "title": "Hello World"
-      }
-    ],
     "viewsContainers": {
       "activitybar": [
         {
