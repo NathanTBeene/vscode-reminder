@@ -1,71 +1,36 @@
-# vscode-reminder README
+# VSCode Reminder Extension
 
-This is the README for your extension "vscode-reminder". After writing up a brief description, we recommend including the following sections.
+A simple VS Code extension for creating repeating reminders that notify you at regular intervals.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Create custom reminders with text and interval (in minutes)
+- Start/pause reminders as needed
+- Snooze reminders for 5 minutes when they trigger
+- Visual countdown showing time until next reminder
+- Persistent reminders that survive VS Code restarts
 
-For example if there is an image subfolder under your extension project workspace:
+## Usage
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Open the Reminders view in the sidebar
+2. Enter reminder text and interval in minutes
+3. Click "Add Reminder" to create it
+4. Use the play/pause button to toggle reminders
+5. When a reminder triggers, choose to dismiss, pause, or snooze
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Installation
+
+Download the latest `.vsix` file from the [GitHub releases page](https://github.com/NathanTBeene/vscode-reminder/releases) and install it in VS Code using `Extensions: Install from VSIX...` command.
+
+### Manual Build
+
+To build the extension yourself:
+
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `vsce package` to create a `.vsix` file
+4. Install the generated `.vsix` file in VS Code
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- VS Code 1.105.0 or higher
