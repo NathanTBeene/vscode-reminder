@@ -19,7 +19,9 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
   constructor(
     private readonly _extensionUri: vscode.Uri,
     private readonly _context: vscode.ExtensionContext
-  ) {}
+  ) {
+    this.loadReminders();
+  }
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -39,6 +41,7 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
       switch (data.type) {
         case "addReminder":
           this.addReminder(data.text, data.intervalMinutes);
+          break;
         case "toggleReminder":
           this.toggleReminder(data.id);
           break;
@@ -51,7 +54,9 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
       }
     });
 
-    this.updateWebview();
+    setTimeout(() => {
+      this.updateWebview();
+    }, 100);
   }
 
   private addReminder(text: string, minutes: number) {
@@ -171,10 +176,13 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
 
   private updateWebview() {
     if (this._view) {
+      console.log(`Updating webview with ${this.reminders.length} reminders.`);
       this._view.webview.postMessage({
         type: "updateReminders",
         reminders: this.reminders,
       });
+    } else {
+      console.log("Webview is not available to update.");
     }
   }
 
@@ -186,8 +194,17 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
     const saved = this._context.globalState.get<Reminder[]>("reminders");
     this.reminders = saved || [];
 
+    console.log(`Loaded ${this.reminders.length} reminders from storage.`);
+
     for (const reminder of this.reminders) {
-      if (reminder.isActive && !reminder.isSnoozed) {
+      if (reminder.isActive && reminder.nextTriggerTime) {
+        // Check if should have already triggered
+        if (reminder.nextTriggerTime <= Date.now()) {
+          if (!reminder.isSnoozed) {
+            reminder.nextTriggerTime =
+              Date.now() + reminder.intervalMinutes * 60000;
+          }
+        }
         this.scheduleReminder(reminder);
       }
     }
