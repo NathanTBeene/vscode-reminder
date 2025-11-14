@@ -184,3 +184,30 @@ button .codicon {
   gap: 6px;
   align-items: center;
 }
+
+@media (max-width: 260px) {
+  .reminder-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .reminder-interval {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .reminder-time-info {
+    justify-content: flex-end;
+  }
+
+  #addBtn span {
+    font-size: 12px;
+  }
+
+  #addBtn .codicon {
+    font-size: 16px !important;
+  }
+}
