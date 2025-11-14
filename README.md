@@ -2,6 +2,8 @@
 
 A simple VS Code extension for creating repeating reminders that notify you at regular intervals.
 
+![VSCode Reminder Extension](media/example.png)
+
 ## Features
 
 - Create custom reminders with text and interval (in minutes)
