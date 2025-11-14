@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src {{cspSource}} 'unsafe-inline'; font-src {{cspSource}}; script-src 'nonce-{{nonce}}';"
+    />
+    <title>Reminders</title>
+    <link rel="stylesheet" href="{{codiconUri}}" />
+    <link rel="stylesheet" href="{{styleUri}}" />
+  </head>
+  <body>
+    <div class="add-form">
+      <input type="text" id="reminderText" placeholder="Reminder text..." />
+
+      <input
+        type="number"
+        id="reminderInterval"
+        placeholder="Interval in minutes (e.g., 10)"
+      />
+
+      <button id="addBtn">
+        <div class="codicon codicon-plus"></div>
+        <span>Add Reminder</span>
+      </button>
+    </div>
+
+    <div id="welcome" class="welcome">
+      <div class="welcome-icon codicon codicon-bell"></div>
+      <h2>No Reminders Yet</h2>
+      <p>Create a repeating reminder to get started</p>
+    </div>
+
+    <div id="remindersList" class="reminders-list"></div>
+
+    <script nonce="{{nonce}}" src="{{scriptUri}}"></script>
+  </body>
+</html>
