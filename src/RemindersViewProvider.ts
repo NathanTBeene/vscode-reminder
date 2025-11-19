@@ -106,13 +106,20 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
   private scheduleReminder(reminder: Reminder) {
     this.cancelReminder(reminder.id);
     if (!reminder.nextTriggerTime) {
+      console.log(
+        `No next trigger time for reminder "${reminder.text}", not scheduling.`
+      );
       return;
     }
 
     const timeUntilTrigger = reminder.nextTriggerTime - Date.now();
 
     console.log(
-      `Scheduling reminder "${reminder.text}" in ${timeUntilTrigger} ms`
+      `Scheduling reminder "${
+        reminder.text
+      }" in ${timeUntilTrigger} ms (${Math.round(
+        timeUntilTrigger / 60000
+      )} minutes)`
     );
 
     if (timeUntilTrigger <= 0) {
@@ -122,34 +129,123 @@ export class RemindersViewProvider implements vscode.WebviewViewProvider {
     }
 
     const timer = setTimeout(() => {
-      console.log(`Triggering Reminder: "${reminder.text}"`);
+      console.log(`Timer fired! Triggering reminder "${reminder.text}".`);
       this.triggerReminder(reminder);
     }, timeUntilTrigger);
 
     this.timers.set(reminder.id, timer);
+    console.log(
+      `Timer set for reminder "${reminder.text}" with ID ${reminder.id}.`
+    );
   }
 
+  // private async triggerReminder(reminder: Reminder) {
+  //   const quickPick = vscode.window.createQuickPick();
+  //   quickPick.title = "Reminder";
+  //   quickPick.placeholder = reminder.text;
+  //   quickPick.items = [
+  //     {
+  //       label: "Dismiss",
+  //       description: "Resume in" + ` ${reminder.intervalMinutes} min`,
+  //     },
+  //     { label: "Pause", description: "Pause this reminder" },
+  //     { label: "Snooze (5 min)", description: "Snooze for 5 minutes" },
+  //   ];
+
+  //   quickPick.show();
+
+  //   const selection = await new Promise<vscode.QuickPickItem | undefined>(
+  //     (resolve) => {
+  //       quickPick.onDidAccept(() => {
+  //         resolve(quickPick.selectedItems[0]);
+  //         quickPick.hide();
+  //         quickPick.dispose();
+  //       });
+  //       quickPick.onDidHide(() => {
+  //         resolve(undefined);
+  //         quickPick.dispose();
+  //       });
+  //     }
+  //   );
+
+  //   console.log(`User selected action: ${selection?.label}`);
+
+  //   if (selection?.label === "Snooze (5 min)") {
+  //     console.log(`Snoozing reminder for 5 minutes.`);
+  //     reminder.isSnoozed = true;
+  //     reminder.nextTriggerTime = Date.now() + 5 * 60000;
+  //     this.scheduleReminder(reminder);
+  //   } else if (selection?.label === "Pause") {
+  //     console.log(`Pausing reminder.`);
+  //     reminder.isActive = false;
+  //     reminder.isSnoozed = false;
+  //     reminder.nextTriggerTime = null;
+  //     this.cancelReminder(reminder.id);
+  //   } else if (selection?.label === "Dismiss") {
+  //     console.log(`Dismissing reminder.`);
+  //     reminder.isSnoozed = false;
+  //     reminder.nextTriggerTime = Date.now() + reminder.intervalMinutes * 60000;
+  //     this.scheduleReminder(reminder);
+  //   } else {
+  //     console.log(`No action selected, rescheduling reminder.`);
+  //     reminder.isSnoozed = false;
+  //     reminder.nextTriggerTime = Date.now() + reminder.intervalMinutes * 60000;
+  //     this.scheduleReminder(reminder);
+  //   }
+  //   this.saveReminders();
+  //   this.updateWebview();
+  // }
+
   private async triggerReminder(reminder: Reminder) {
-    const action = await vscode.window.showInformationMessage(
-      `Reminder: ${reminder.text}`,
-      "Dismiss",
-      "Pause",
-      "Snooze (5 min)"
-    );
+    let action;
+    try {
+      console.log("Showing reminder notification.");
+
+      const timeoutPromise = new Promise<undefined>((resolve) => {
+        setTimeout(() => {
+          console.log("Notification timeout reached.");
+          resolve(undefined);
+        }, 10000);
+      });
+
+      const notificationPromise = vscode.window.showInformationMessage(
+        `Reminder: ${reminder.text}`,
+        "Dismiss",
+        "Pause",
+        "Snooze (5 min)"
+      );
+
+      action = await Promise.race([
+        Promise.resolve(notificationPromise),
+        timeoutPromise,
+      ]);
+
+      console.log(`Notification closed with action: ${action}`);
+    } catch {
+      console.log("Notification was dismissed without action.");
+      action = undefined;
+    }
 
     console.log(`User selected action: ${action}`);
 
     if (action === "Snooze (5 min)") {
+      console.log(`Snoozing reminder for 5 minutes.`);
       reminder.isSnoozed = true;
       reminder.nextTriggerTime = Date.now() + 5 * 60000;
       this.scheduleReminder(reminder);
     } else if (action === "Pause") {
+      console.log(`Pausing reminder.`);
       reminder.isActive = false;
       reminder.isSnoozed = false;
       reminder.nextTriggerTime = null;
       this.cancelReminder(reminder.id);
+    } else if (action === "Dismiss") {
+      console.log(`Dismissing reminder.`);
+      reminder.isSnoozed = false;
+      reminder.nextTriggerTime = Date.now() + reminder.intervalMinutes * 60000;
+      this.scheduleReminder(reminder);
     } else {
-      // Otherwise we dismiss
+      console.log(`No action selected, rescheduling reminder.`);
       reminder.isSnoozed = false;
       reminder.nextTriggerTime = Date.now() + reminder.intervalMinutes * 60000;
       this.scheduleReminder(reminder);
