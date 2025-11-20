@@ -1,4 +1,4 @@
-# VSCode Reminder Extension
+# Interval Reminders
 > Current Version: v0.2.1 [changelog](./CHANGELOG.md)
 
 A simple VS Code extension for creating repeating reminders that notify you at regular intervals.
@@ -23,11 +23,18 @@ A simple VS Code extension for creating repeating reminders that notify you at r
 
 ## Installation
 
-1. Download the latest `.vsix` file from the [GitHub releases page](https://github.com/NathanTBeene/vscode-reminder/releases).
-2. In VSCode, go to your `Extensions` tab.
-3. In the top right corner, click the three dots.
-4. Click `Install from VSIX`.
-5. Enjoy.
+#### Marketplace
+1. Go to your `Extensions` tab in VSCode
+2. Search `Interval Reminders`
+3. Click install
+4. Enjoy
+
+#### Manual Install
+1. Download the latest `.vsix` file from the [GitHub releases page](https://github.com/NathanTBeene/vscode-reminder/releases)
+2. In VSCode, go to your `Extensions` tab
+3. In the top right corner, click the three dots
+4. Click `Install from VSIX`
+5. Enjoy
 
 ### Manual Build
 
