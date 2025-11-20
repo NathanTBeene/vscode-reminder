@@ -34,7 +34,7 @@ To build the extension yourself:
 
 1. Clone the repository
 2. Run `npm install` to install dependencies
-3. Run `vsce package` to create a `.vsix` file
+3. Run `npm run package` to compile and create a `.vsix` file
 4. Install the generated `.vsix` file in VS Code
 
 ## Requirements
