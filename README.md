@@ -1,4 +1,5 @@
 # VSCode Reminder Extension
+> Current Version: v0.2.1 [changelog](./CHANGELOG.md)
 
 A simple VS Code extension for creating repeating reminders that notify you at regular intervals.
 
