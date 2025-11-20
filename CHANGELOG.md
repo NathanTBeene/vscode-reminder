@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-11-20
+
+### Changed
+- `load()` function within `ReminderManager.ts` will now migrate previous `ReminderData` format to current.
+
+### Added
+- Event listener in `script.js` for pressing `ENTER` to submit reminder.
+
+### Fixed
+- Reminders now trigger properly after being added for the first time.
+
 ## [0.2.0] - 2025-11-20
 
 ### Changed

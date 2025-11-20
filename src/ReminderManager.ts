@@ -143,9 +143,10 @@ export class ReminderManager {
 
   // Load reminders from persistent storage
   private load(): void {
-    const saved = this.context.globalState.get<ReminderData[]>('reminders', []);
+    const saved = this.context.globalState.get<any[]>('reminders', []);
 
     if (!saved || saved.length === 0) {
+      console.log('No saved reminders found.');
       return;
     }
 
@@ -153,23 +154,41 @@ export class ReminderManager {
 
     for (const data of saved) {
       try {
-        const reminder = Reminder.fromJSON(data);
+        // Handle migration of old format to new
+        let reminderData: ReminderData;
+
+        if ('isActive' in data || 'isSnoozed' in data) {
+          reminderData = {
+            id: data.id,
+            text: data.text,
+            intervalMinutes: data.intervalMinutes,
+            state: data.isSnoozed ? ReminderState.SNOOZED :
+              (data.isActive ? ReminderState.ACTIVE : ReminderState.PAUSED),
+            nextTriggerTime: data.nextTriggerTime,
+            createdAt: data.createdAt || Date.now(),
+          };
+        } else {
+          reminderData = data as ReminderData;
+        }
+
+        const reminder = Reminder.fromJSON(reminderData);
         this.reminders.set(reminder.id, reminder);
 
-        // Schedule only active reminders
+        // Reschedule only active reminders
         if (reminder.isActive) {
-          // If reminder should have triggered while extension was inactive,
-          // schedule it for next interval
           if (reminder.nextTriggerTime && reminder.nextTriggerTime <= Date.now()) {
-            reminder.reschedule();
+            if (!reminder.isSnoozed) {
+              reminder.reschedule();
+            }
           }
+          this.scheduler.schedule(reminder);
         }
-        this.scheduler.schedule(reminder);
       } catch (error) {
         console.error('Failed to load reminder:', error);
       }
     }
 
+    this.save(); // Save back any migrated data
     console.log(`Loaded ${this.reminders.size} reminders.`);
   }
 

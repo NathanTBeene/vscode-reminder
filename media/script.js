@@ -21,6 +21,17 @@ document.getElementById("addBtn").addEventListener("click", () => {
   }
 });
 
+// Listen for enter key on reminderText input
+document
+  .getElementById("reminderText")
+  .addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("addBtn").click();
+    }
+  });
+
+
 window.addEventListener("message", (event) => {
   const message = event.data;
   if (message.type === "updateReminders") {
