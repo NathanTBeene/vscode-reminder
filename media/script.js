@@ -47,34 +47,35 @@ function renderReminders() {
       let timeInfo = "";
       let classNames = "reminder";
 
-      if (r.isActive) {
-        if (r.isSnoozed) {
-          statusBadge =
-            '<span class="status-badge status-snoozed">SNOOZED</span>';
-          classNames += " snoozed";
-        } else {
-          statusBadge =
-            '<span class="status-badge status-active">ACTIVE</span>';
-          classNames += " active";
-        }
-
-        if (r.nextTriggerTime) {
-          const timeLeft = Math.max(0, r.nextTriggerTime - Date.now());
-          const minutes = Math.floor(timeLeft / 60000);
-          const seconds = Math.floor((timeLeft % 60000) / 1000);
-          timeInfo = `${minutes}m ${seconds}s`;
-        }
+      if (r.state === "snoozed") {
+        statusBadge =
+          '<span class="status-badge status-snoozed">SNOOZED</span>';
+        classNames += " snoozed";
+      } else if (r.state === "active") {
+        statusBadge =
+          '<span class="status-badge status-active">ACTIVE</span>';
+        classNames += " active";
       } else {
+        // state === "paused"
         statusBadge =
           '<span class="status-badge status-inactive">INACTIVE</span>';
       }
 
+      // Show time info for active and snoozed reminders
+      if (r.state !== "paused" && r.nextTriggerTime) {
+        const timeLeft = Math.max(0, r.nextTriggerTime - Date.now());
+        const minutes = Math.floor(timeLeft / 60000);
+        const seconds = Math.floor((timeLeft % 60000) / 1000);
+        timeInfo = `${minutes}m ${seconds}s`;
+      }
+
       const toggleIcon = () => {
-        if (r.isActive && r.isSnoozed) {
+        if (r.state === "snoozed") {
           return "debug-stop";
-        } else if (r.isActive) {
+        } else if (r.state === "active") {
           return "debug-pause";
         } else {
+          // state === "paused"
           return "play";
         }
       };
@@ -106,14 +107,12 @@ function renderReminders() {
           <div class="reminder-header">
             <div class="reminder-text">${r.text}</div>
             <div class="reminder-controls">
-              <button class="icon-btn toggle-btn" data-id="${
-                r.id
-              }" title="Toggle active/inactive">
+              <button class="icon-btn toggle-btn" data-id="${r.id
+        }" title="Toggle active/inactive">
                 <span class="codicon codicon-${toggleIcon()}"></span>
               </button>
-              <button class="icon-btn delete-btn" data-id="${
-                r.id
-              }" title="Delete">
+              <button class="icon-btn delete-btn" data-id="${r.id
+        }" title="Delete">
                   <span class="codicon codicon-trash delete"></span>
               </button>
             </div>
@@ -122,14 +121,13 @@ function renderReminders() {
           <div class="reminder-info">
             <div class="reminder-interval">
               ${statusBadge}
-              ${r.isSnoozed ? "" : `<span>Every ${formatInterval()}</span>`}
+              ${r.state === "snoozed" ? "" : `<span>Every ${formatInterval()}</span>`}
 
             </div>
 
             <div class="reminder-time-info">
-              <span class="codicon ${
-                r.isActive ? "codicon-bell" : "codicon-bell-slash"
-              }"></span>
+              <span class="codicon ${r.state !== "paused" ? "codicon-bell" : "codicon-bell-slash"
+        }"></span>
               ${timeInfo ? `<div>${timeInfo}</div>` : ""}
             </div>
           </div>
@@ -173,7 +171,7 @@ function deleteReminder(id) {
 
 // Update countdown every second
 updateInterval = setInterval(() => {
-  if (reminders.length > 0 && reminders.some((r) => r.isActive)) {
+  if (reminders.length > 0 && reminders.some((r) => r.state !== "paused")) {
     renderReminders();
   }
 }, 1000);

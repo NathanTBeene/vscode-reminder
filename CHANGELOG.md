@@ -5,7 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.2] - 2025-11-20
+## [0.2.0] - 2025-11-20
+
+### Changed
+- **Major refactoring**: Complete architectural overhaul with better separation of concerns
+- Introduced state machine for reminder lifecycle (`ACTIVE`, `PAUSED`, `SNOOZED`) replacing the boolean flags
+- Split singular `RemindersViewProvider` into more focused modules:
+  - `Reminder.ts` - Reminder model with state machine and validation
+  - `ReminderScheduler.ts` - Dedicated timer management
+  - `ReminderManager.ts` - Business logic and persistance
+  - `RemindersViewProvider.ts` - UI Layer
+- Updated webview to use state-based format as well
+- Better observer pattern for UI updates in `script.js`
+- Improved resource cleanup with a proper `dispose()` call.
+
+### Added
+- Better error handling and validation for timers
+- Scheduling states for easier mantaining of notifications.
+- Stat tracking via `ReminderManager.getStats()`
+
+### Fixed
+- Improved lifecycle management that prevents invalid state combinations
+- Better timer cleanup and rsolution to prevent memory leaks.
+- More reliable scheduling for missed reminders after an extension reload.
+
+### Developer Notes
+- Extension is much more maintainable with better layers.
+- Each component is now able to be tested independently.
+- Easier to extend with new features.
+- No user-facing changes. The UI and behavior remain the same.
+
+## [0.1.2] - 2025-08-20
 
 ### Added
 

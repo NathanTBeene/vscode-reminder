@@ -11,7 +11,9 @@ export function activate(context: vscode.ExtensionContext) {
       provider
     )
   );
+
+  context.subscriptions.push(provider);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
